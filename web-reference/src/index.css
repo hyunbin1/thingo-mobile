@@ -1,0 +1,263 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+@import 'tailwindcss';
+
+/* 항상 모바일 뷰(임시처리): breakpoint를 매우 크게 해서 sm/md/lg/xl 미디어가 적용되지 않도록 함 */
+@theme {
+  --breakpoint-sm: 9999rem;
+  --breakpoint-md: 9999rem;
+  --breakpoint-lg: 9999rem;
+  --breakpoint-xl: 9999rem;
+  --breakpoint-2xl: 9999rem;
+}
+
+/* font family */
+:root {
+  font-family:
+    'Pretendard Variable',
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    Roboto,
+    'Helvetica Neue',
+    'Segoe UI',
+    'Apple SD Gothic Neo',
+    'Noto Sans KR',
+    'Malgun Gothic',
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol',
+    sans-serif;
+}
+
+/* typography */
+@theme {
+  --text-heading01: 40px;
+  --text-heading01--font-weight: 700;
+  --text-heading01--line-height: 1.5;
+
+  --text-heading02: 28px;
+  --text-heading02--font-weight: 700;
+  --text-heading02--line-height: 1.5;
+
+  --text-title01: 20px;
+  --text-title01--font-weight: 700;
+  --text-title01--line-height: 1.5;
+
+  --text-title02: 20px;
+  --text-title02--font-weight: 600;
+  --text-title02--line-height: 1.5;
+
+  --text-title03: 18px;
+  --text-title03--font-weight: 700;
+  --text-title03--line-height: 1.5;
+
+  --text-body01: 20px;
+  --text-body01--font-weight: 400;
+  --text-body01--line-height: 1.5;
+
+  --text-body02: 16px;
+  --text-body02--font-weight: 600;
+  --text-body02--line-height: 1.5;
+
+  --text-body03: 16px;
+  --text-body03--font-weight: 400;
+  --text-body03--line-height: 1.5;
+
+  --text-body04: 14px;
+  --text-body04--font-weight: 600;
+  --text-body04--line-height: 1.5;
+
+  --text-body05: 14px;
+  --text-body05--font-weight: 400;
+  --text-body05--line-height: 1.5;
+
+  --text-body06: 14px;
+  --text-body06--font-weight: 500;
+  --text-body06--line-height: 1.5;
+
+  --text-caption01: 12px;
+  --text-caption01--font-weight: 600;
+  --text-caption01--line-height: 1.5;
+
+  --text-caption02: 12px;
+  --text-caption02--font-weight: 400;
+  --text-caption02--line-height: 1.5;
+
+  --text-caption03: 11px;
+  --text-caption03--font-weight: 600;
+  --text-caption03--line-height: 1.5;
+
+  --text-caption04: 11px;
+  --text-caption04--font-weight: 400;
+  --text-caption04--line-height: 1.5;
+
+  --text-caption05: 10px;
+  --text-caption05--font-weight: 600;
+  --text-caption05--line-height: 1.5;
+
+  --text-caption06: 10px;
+  --text-caption06--font-weight: 200;
+  --text-caption06--line-height: 1.5;
+}
+
+/* tailwind color palette */
+@theme {
+  --color-*: initial;
+
+  --color-black: var(--color-black);
+  --color-white: var(--color-white);
+  --color-bg: var(--color-bg);
+
+  --color-grey-80: var(--color-grey-80);
+  --color-grey-60: var(--color-grey-60);
+  --color-grey-40: var(--color-grey-40);
+  --color-grey-30: var(--color-grey-30);
+  --color-grey-20: var(--color-grey-20);
+  --color-grey-10: var(--color-grey-10);
+  --color-grey-05: var(--color-grey-05);
+  --color-grey-02: var(--color-grey-02);
+
+  --color-mju-primary: var(--color-mju-primary);
+  --color-mju-secondary: var(--color-mju-secondary);
+
+  --color-blue-35: var(--color-blue-35);
+  --color-blue-20: var(--color-blue-20);
+  --color-blue-15: var(--color-blue-15);
+  --color-blue-10: var(--color-blue-10);
+  --color-blue-05: var(--color-blue-05);
+
+  --color-error: var(--color-error);
+}
+
+/* mobile web color palette */
+:root {
+  --color-*: initial;
+
+  --color-black: #17171b;
+  --color-white: #ffffff;
+  --color-bg: rgba(23, 23, 27, 0.6);
+
+  --color-grey-80: #4b4d4f;
+  --color-grey-60: #6d7073;
+  --color-grey-40: #909499;
+  --color-grey-30: #aeb2b6;
+  --color-grey-20: #cdd0d4;
+  --color-grey-10: #e3e6e6;
+  --color-grey-02: #f0f2f5;
+
+  --color-mju-primary: #1778ff;
+  --color-mju-secondary: #23aeff;
+
+  --color-blue-35: #2587ff;
+  --color-blue-20: #4593ff;
+  --color-blue-15: #5dabff;
+  --color-blue-10: #8bc7ff;
+  --color-blue-05: #e8f1ff;
+
+  --color-error: #f45353;
+}
+
+/* 스크롤바 제거 */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* 검색 결과 검색어 highlight */
+.search-result__highlight em {
+  background-color: rgba(255, 235, 59, 0.4);
+  font-style: normal;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+/* BlockNote.js 좌우 padding (항상 모바일 스타일 적용) */
+.bn-editor {
+  padding: 0 22px !important;
+}
+
+.bn-side-menu > *:nth-child(1) {
+  margin-left: 24px !important;
+}
+.bn-side-menu > *:nth-child(2) {
+  margin-left: -6px !important;
+}
+
+.block-editor-handle {
+  position: absolute;
+  left: auto;
+  right: 0;
+  transform: translateX(100%);
+}
+
+/* 메인 V3 "옆으로 슬라이드" 인디케이터 애니메이션 */
+@keyframes slide-indicator-right {
+  0% {
+    transform: translateX(0);
+  }
+  30% {
+    transform: translateX(6px);
+  }
+  60% {
+    transform: translateX(-2px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-indicator-left {
+  0% {
+    transform: translateX(0);
+  }
+  30% {
+    transform: translateX(-6px);
+  }
+  60% {
+    transform: translateX(2px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.slide-indicator-anim-right {
+  animation: slide-indicator-right 1.4s ease-in-out infinite;
+}
+
+.slide-indicator-anim-left {
+  animation: slide-indicator-left 1.4s ease-in-out infinite;
+}
+.main-arrow-blur {
+  background-color: rgba(37, 135, 255, 0.06);
+  backdrop-filter: blur(3px);
+  border-radius: 9999px;
+}
+
+/* 메인 광고 배너: 이미지 비율 고정, 모바일 가로 꽉 차게, 데스크톱 max-width 제한 */
+.main-ad-banner {
+  width: 100%;
+  aspect-ratio: 393 / 156;
+  overflow: hidden;
+}
+
+.main-ad-banner__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+@media (min-width: 1024px) {
+  .main-ad-banner {
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

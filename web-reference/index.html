@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <!-- Metadata -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thingo</title>
+    <meta name="description" content="명지대학교 학생들을 위한 통합 검색 플랫폼" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png" />
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Thingo" />
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://thingo.kr/" />
+    <meta property="og:title" content="Thingo" />
+    <meta property="og:description" content="명지대학교 학생들을 위한 통합 검색 플랫폼" />
+    <meta property="og:image" content="/img/og-image.png" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://thingo.kr/" />
+    <meta property="twitter:title" content="Thingo" />
+    <meta property="twitter:description" content="명지대학교 학생들을 위한 통합 검색 플랫폼" />
+    <meta property="twitter:image" content="/img/og-image.png" />
+
+    <!-- Naver Search Advisor -->
+    <meta name="naver-site-verification" content="f5e8ece9b1f4ac73732bad97c642abf03b974e81" />
+
+    <!-- Google Tag Manager -->
+    <script>
+      (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-PJ3WZGCP');
+    </script>
+    <!-- End Google Tag Manager -->
+  </head>
+
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+      <iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-PJ3WZGCP"
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden">
+      </iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

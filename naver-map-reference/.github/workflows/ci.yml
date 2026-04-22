@@ -1,0 +1,180 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "17"
+
+      #      - name: Cache Gradle
+      #        uses: actions/cache@v4
+      #        with:
+      #          path: |
+      #            ~/.gradle/wrapper
+      #            ~/.gradle/caches
+      #          key: ${{ runner.os }}-gradle-${{ hashFiles('example/android/gradle/wrapper/gradle-wrapper.properties') }}-lint
+      #          restore-keys: |
+      #            ${{ runner.os }}-gradle-${{matrix.arch}}-lint-
+
+      - name: Install Ktlint
+        run: curl -sSLO https://github.com/pinterest/ktlint/releases/download/1.8.0/ktlint && chmod a+x ktlint && sudo mv ktlint /usr/local/bin/
+
+      - name: Check
+        run: pnpm run t
+
+  #  test:
+  #    runs-on: ubuntu-latest
+  #    steps:
+  #      - name: Checkout
+  #        uses: actions/checkout@v3
+  #
+  #      - name: Setup
+  #        uses: ./.github/actions/setup
+  #
+  #      - name: Run unit tests
+  #        run: yarn test --maxWorkers=2 --coverage
+
+  #  build-library:
+  #    runs-on: ubuntu-latest
+  #    steps:
+  #      - name: Checkout
+  #        uses: actions/checkout@v3
+  #
+  #      - name: Setup
+  #        uses: ./.github/actions/setup
+  #
+  #      - name: Build package
+  #        run: yarn prepare
+
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Build documentation
+        run: pnpm build:docs
+
+  build-android:
+    runs-on: ubuntu-latest
+    env:
+      TURBO_CACHE_DIR: .turbo/android
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Set Android Home
+        run: echo "sdk.dir=$ANDROID_HOME" > example/android/local.properties
+
+      - name: Cache turborepo for Android
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.TURBO_CACHE_DIR }}
+          key: ${{ runner.os }}-turborepo-android-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-turborepo-android-
+
+      - name: Check turborepo cache for Android
+        run: |
+          TURBO_CACHE_STATUS=$(node -p "($(pnpm turbo run ci:android --single-package --cache-dir="${{ env.TURBO_CACHE_DIR }}" --dry=json)).tasks.find(t => t.task === 'ci:android').cache.status")
+
+          if [[ $TURBO_CACHE_STATUS == "HIT" ]]; then
+            echo "turbo_cache_hit=1" >> $GITHUB_ENV
+          fi
+
+      - name: Install JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: "17"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Display ANDROID_HOME
+        run: echo $ANDROID_HOME
+
+      - name: Cache Gradle
+        if: env.turbo_cache_hit != 1
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/wrapper
+            ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('example/android/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build example for Android
+        env:
+          JAVA_OPTS: "-XX:MaxHeapSize=6g"
+        run: pnpm turbo:android
+
+  build-ios:
+    runs-on: macos-15
+    env:
+      TURBO_CACHE_DIR: .turbo/ios
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Cache turborepo for iOS
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.TURBO_CACHE_DIR }}
+          key: ${{ runner.os }}-turborepo-ios-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-turborepo-ios-
+
+      - name: Check turborepo cache for iOS
+        run: |
+          TURBO_CACHE_STATUS=$(node -p "($(pnpm turbo run ci:ios --single-package --cache-dir="${{ env.TURBO_CACHE_DIR }}" --dry=json)).tasks.find(t => t.task === 'ci:ios').cache.status")
+
+          if [[ $TURBO_CACHE_STATUS == "HIT" ]]; then
+            echo "turbo_cache_hit=1" >> $GITHUB_ENV
+          fi
+
+      - name: Cache cocoapods
+        if: env.turbo_cache_hit != 1
+        id: cocoapods-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            **/ios/Pods
+            example/ios/build/generated/ios
+          key: ${{ runner.os }}-cocoapods-${{ hashFiles('example/ios/Podfile.lock') }}-noop
+          restore-keys: |
+            ${{ runner.os }}-cocoapods-
+
+      - name: Install pod for codegen stuffs
+        run: pnpm pod:update
+      - name: Build example for iOS
+        run: pnpm turbo:ios

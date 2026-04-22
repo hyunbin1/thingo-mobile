@@ -1,0 +1,60 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint:js:
+      glob: "*.{js,ts,jsx,tsx}"
+      run: pnpm biome check {staged_files}
+    lint:objc:
+      glob: "*.{h,mm,m,hpp,cpp,c}"
+      run: bash ./script/clang-lint.sh {staged_files}
+    lint:kotlin:
+      glob: "*.kt"
+      run: bash ./script/ktlint-lint.sh {staged_files}
+    typecheck:
+      glob: "*.{ts,tsx}"
+      run: pnpm tsc --noEmit
+
+format:
+  parallel: true
+  commands:
+    format:objc:
+      glob: "*.{h,mm,m,hpp,cpp,c}"
+      run: bash ./script/clang-format.sh {all_files}
+    format:kotlin:
+      glob: "*.kt"
+      run: bash ./script/ktlint-format.sh {all_files}
+    format:js:
+      glob: "*.{js,ts,jsx,tsx}"
+      run: pnpm biome check --fix
+
+check:
+  parallel: true
+  commands:
+    lint:js:
+      glob: "*.{js,ts,jsx,tsx}"
+      run: pnpm biome check {staged_files}
+    lint:objc:
+      glob: "*.{h,mm,m,hpp,cpp,c}"
+      run: bash ./script/clang-lint.sh {all_files}
+    lint:kotlin:
+      glob: "*.kt"
+      run: bash ./script/ktlint-lint.sh {all_files}
+    typecheck:package:
+      run: pnpm tsc --noEmit
+    typecheck:example:
+      root: example
+      run: pnpm tsc --noEmit
+    build-expo-config-plugin:
+      run: pnpm build:expo-config-plugin
+    build-package:
+      run: pnpm bob build
+#    build-docs:
+#      run: pnpm build:docs
+#    typecheck:docs:
+#      root: docs
+#      run: pnpm tsc --noEmit
+
+commit-msg:
+  commands:
+    commitlint:
+      run: npx --no-install commitlint --edit

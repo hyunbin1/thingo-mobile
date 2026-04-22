@@ -1,0 +1,47 @@
+name: main-branch-production-deploy
+
+# main 브랜치에 push 이벤트가 발생할 때 실행됩니다
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    # PR이 merge 되었고 PR의 소스(head) 브랜치가 develop일 때만 실행됩니다
+    if: ${{ github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'develop' }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Install project dependencies
+        run: npm ci
+
+      - name: Build project
+        env:
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+        run: npm run build
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Sync build folder to S3
+        run: |
+          aws s3 sync ./dist s3://s3-thingo-vite --delete
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
